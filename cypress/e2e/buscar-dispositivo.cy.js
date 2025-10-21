@@ -1,10 +1,12 @@
 /// <reference types="cypress" />
 
+const payloadDispositivo = require('../fixtures/dispositivo.json');
+
 describe('Buscar Dispositivo', () => {
     it('Buscar dispositivo existente', () => {
         cy.request({
             method: 'GET',
-            url: 'https://api.restful-api.dev/objects/3'
+            url: '/objects/3'
         }).then((response) => {
             expect(response.status).to.eq(200);
             expect(response.body.data['capacity GB']).to.eq(512);
@@ -17,7 +19,7 @@ describe('Buscar Dispositivo', () => {
     it('Buscar dispositivo inexistente', () => {
         cy.request({
             method: 'GET',
-            url: 'https://api.restful-api.dev/objects/3XPTO',
+            url: 'objects/3XPTO',
             failOnStatusCode: false
         }).then((response) => {
             expect(response.status).to.eq(404);
@@ -27,25 +29,16 @@ describe('Buscar Dispositivo', () => {
     it('Cadastrar dispositivo', () =>{
         cy.request({
             method: 'POST',
-            url: 'https://api.restful-api.dev/objects',
-            body: {
-                "name": "Samsung Galaxy S21 Ultra",
-                "data": {
-                    "year": 2024,
-                    "price": 6000,
-                    "CPU model": "Samsung Exynos 2100",
-                    "Hard disk size": "1 TB",
-                    "color": "red"
-                }
-            }
+            url: '/objects',
+            body: payloadDispositivo
         }).then((response) => {
             expect(response.status).to.eq(200);
-            expect(response.body.name).to.eq('Samsung Galaxy S21 Ultra');
-            expect(response.body.data['CPU model']).to.eq('Samsung Exynos 2100');
-            expect(response.body.data['Hard disk size']).to.eq('1 TB');
-            expect(response.body.data.year).to.eq(2024);
-            expect(response.body.data.price).to.eq(6000);
-            expect(response.body.data.color).to.eq('red');
+            expect(response.body.name).to.eq(payloadDispositivo.name);
+            expect(response.body.data['CPU model']).to.eq(payloadDispositivo.data['CPU model']);
+            expect(response.body.data['Hard disk size']).to.eq(payloadDispositivo.data['Hard disk size']);
+            expect(response.body.data.year).to.eq(payloadDispositivo.data.year);
+            expect(response.body.data.price).to.eq(payloadDispositivo.data.price);
+            expect(response.body.data.color).to.eq(payloadDispositivo.data.color);
         })
     });
 });
